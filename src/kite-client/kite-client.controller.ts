@@ -37,22 +37,51 @@ export class KiteClientController {
     }
   }
 
+  @Get('instruments')
+  async getInstruments(
+    @Query('userId') userId: string,
+    @Query('segment') segment: string[],
+  ): Promise<any[]> {
+    console.log(typeof(segment));
+    console.log(segment);
+    console.log("entered Get Instruments Controller")
+    return this.kiteClientService.getAllInstruments(userId, segment);
+  }
+
+  
+  @Get('GetAllInstruments')
+  async getAllInstruments(
+    @Query('userId') userId: string,
+    @Query('segment') segment?: string[],
+  ): Promise<any[]> {
+    console.log(typeof(segment));
+    console.log(segment);
+    console.log("entered Get Instruments Controller")
+    return this.kiteClientService.getInstruments(userId);
+  }
+
   @Get(':instrumentToken')
   async getHistoricalData(
     @Param('instrumentToken') instrumentToken: string,
     @Query('interval') interval: string,
     @Query('fromDate') fromDate: string,
     @Query('toDate') toDate: string,
-    @Query('UserId') userId: string
+    @Query('userId') userId: string,
+    @Query('continuous') continuous?: boolean // Make it optional
   ): Promise<any> {
+    // Validate interval, fromDate, toDate here if needed
+    console.log("entered Get Historical Controller")
     return this.kiteClientService.getHistoricalData(
       instrumentToken,
       interval,
       fromDate,
       toDate,
-      userId
+      userId,
+      continuous // Pass it to the service method
     );
   }
+
+
 
   @Get('logout')
   async logout(@Query('UserId') userId: string, @Query('access_token') accessToken: string): Promise<any> {

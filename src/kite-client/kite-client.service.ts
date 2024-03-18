@@ -74,16 +74,51 @@ export class KiteClientService {
       throw error;
     }
   }
-
-  async getHistoricalData(instrumentToken: string, interval: string, fromDate: string, toDate: string , userId: string): Promise<any> {
+   
+  async getAllInstruments(userId: string, segments?: string[]): Promise<any[]> {
     try {
-      const kiteClient = await this.kiteConnectPool.getClient(userId)
+      console.log("entered Get Instruments Service")
+      const kiteClient= await this.kiteConnectPool.getClient(userId);
+      console.log(kiteClient)
+      const response = await kiteClient.getInstruments(segments);
+      return response;
+    } catch (error) {
+      console.log(error)
+      throw error;
+    }
+  }
+
+  async getInstruments(userId: string): Promise<any[]> {
+    try {
+      console.log("entered Get Instruments Service")
+      const kiteClient= await this.kiteConnectPool.getClient(userId);
+      console.log(kiteClient)
+      const response = await kiteClient.getInstruments();
+      return response;
+    } catch (error) {
+      console.log(error)
+      throw error;
+    }
+  }
+  async getHistoricalData(
+    instrumentToken: string,
+    interval: string,
+    fromDate: string,
+    toDate: string,
+    userId: string,
+    continuous: boolean = false // Optional parameter with default value
+  ): Promise<any[]> {
+    try {
+      console.log("entered Get Historical Service Controller")
+      const kiteClient = await this.kiteConnectPool.getClient(userId);
       console.log(kiteClient);
-      const instrumentToken = "256265"; // e.g., '256265' for NIFTY 50
-const fromDate = "2024-02-01"; // Start date in YYYY-MM-DD format
-const toDate = "2024-02-10"; // End date in YYYY-MM-DD format
-const interval = "day"; // Could be "3minute", "5minute", "day" etc.
-      const response = await kiteClient.getHistoricalData(instrumentToken, interval, fromDate, toDate, false, false);
+      const response = await kiteClient.getHistoricalData(
+        instrumentToken,
+        interval,
+        fromDate,
+        toDate,
+        continuous
+      );
       return response;
     } catch (error) {
       throw error;
